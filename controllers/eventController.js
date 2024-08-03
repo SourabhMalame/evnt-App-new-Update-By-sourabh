@@ -182,3 +182,36 @@ exports.getEventbyEventId = async (req, res) => {
         });
     }
 };
+
+// Controller to delete an event
+exports.deleteEvent = async (req, res) => {
+    try {
+        const { id } = req.params; // Get the event ID from request parameters
+
+        // Find and delete the event by ID
+        const event = await Event.findByIdAndDelete(id);
+
+        // If no event is found, return a 404 status
+        if (!event) {
+            return res.status(404).json({
+                status: 'fail',
+                message: 'Event not found',
+            });
+        }
+
+        // Return a success response with a message
+        res.status(200).json({
+            status: 'success',
+            message: 'Event successfully deleted',
+        });
+
+    } catch (error) {
+        // Handle any errors that occur
+        console.error('Error deleting event:', error); // Log the error for debugging
+        res.status(500).json({
+            status: 'error',
+            message: 'Server error occurred while deleting event',
+            error: error.message
+        });
+    }
+};

@@ -85,3 +85,49 @@ exports.addEventIdToOrganiser = async (req, res) => {
         });
     }
 };
+
+
+// Follow an organiser
+exports.followOrganiser = async (req, res) => {
+  try {
+    const { organiserId, userId } = req.body;
+
+    // Add the userId to the followers array of the organiser
+    const organiser = await Organiser.findByIdAndUpdate(
+      organiserId,
+      { $addToSet: { followers: userId } },
+      { new: true }
+    );
+
+    if (!organiser) {
+      return res.status(404).json({ message: "Organiser not found" });
+    }
+
+    res.status(200).json({ message: "Successfully followed the organiser", organiser });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Unfollow an organiser
+exports.unfollowOrganiser = async (req, res) => {
+  try {
+    const { organiserId, userId } = req.body;
+
+    // Remove the userId from the followers array of the organiser
+    const organiser = await Organiser.findByIdAndUpdate(
+      organiserId,
+      { $pull: { followers: userId } },
+      { new: true }
+    );
+
+    if (!organiser) {
+      return res.status(404).json({ message: "Organiser not found" });
+    }
+
+    res.status(200).json({ message: "Successfully unfollowed the organiser", organiser });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+

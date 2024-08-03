@@ -9,5 +9,9 @@ router.route("/updateOrganiser/:id").patch(organiserController.updateData);
 
 router.patch('/addEventId', organiserController.addEventIdToOrganiser);
 
+// Add follow and unfollow routes
+router.patch('/follow', organiserController.followOrganiser);
+router.patch('/unfollow', organiserController.unfollowOrganiser);
+
 
 module.exports = router;

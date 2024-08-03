@@ -23,4 +23,8 @@ router.route("/getAllEventIds").get(eventController.getAllEventIds);
 router
     .route("/getEventByEventId/:evtId")
     .get(eventController.getEventbyEventId);
+
+router.route('/delete/:id')
+    .delete(eventController.deleteEvent);
+    
 module.exports = router;

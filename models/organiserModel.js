@@ -46,14 +46,15 @@ const organiserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Event',
     }],
+    followers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }],
     createdAt: {
         type: Date,
         default: Date.now,
     },
 });
-
-// Create an index for efficient querying
-// organiserSchema.index({ name: 1, email: 1 });
 
 // Create and export the model
 const Organiser = mongoose.model('Organiser', organiserSchema);
