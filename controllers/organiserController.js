@@ -1,6 +1,6 @@
 const Organiser = require('../models/organiserModel');
 
-// Controller to create a new organiser
+// Create a new organiser
 exports.createOrganiser = async (req, res) => {
     try {
         const newOrganiser = await Organiser.create(req.body);
@@ -19,7 +19,7 @@ exports.createOrganiser = async (req, res) => {
     }
 };
 
-// Controller to update organiser data
+// Update organiser data
 exports.updateData = async (req, res) => {
     try {
         // Ensure req.user is available and authenticated
@@ -61,7 +61,7 @@ exports.updateData = async (req, res) => {
     }
 };
 
-// Controller to add a single event ID to an organiser
+// Add a single event ID to an organiser
 exports.addEventIdToOrganiser = async (req, res) => {
     try {
         const { organiserId, eventId } = req.body;
@@ -86,48 +86,134 @@ exports.addEventIdToOrganiser = async (req, res) => {
     }
 };
 
-
 // Follow an organiser
 exports.followOrganiser = async (req, res) => {
-  try {
-    const { organiserId, userId } = req.body;
+    try {
+        const { organiserId, userId } = req.body;
 
-    // Add the userId to the followers array of the organiser
-    const organiser = await Organiser.findByIdAndUpdate(
-      organiserId,
-      { $addToSet: { followers: userId } },
-      { new: true }
-    );
+        // Add the userId to the followers array of the organiser
+        const organiser = await Organiser.findByIdAndUpdate(
+            organiserId,
+            { $addToSet: { followers: userId } },
+            { new: true }
+        );
 
-    if (!organiser) {
-      return res.status(404).json({ message: "Organiser not found" });
+        if (!organiser) {
+            return res.status(404).json({
+                status: 'fail',
+                message: 'Organiser not found'
+            });
+        }
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Successfully followed the organiser',
+            data: organiser
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            message: error.message
+        });
     }
-
-    res.status(200).json({ message: "Successfully followed the organiser", organiser });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
 };
 
 // Unfollow an organiser
 exports.unfollowOrganiser = async (req, res) => {
-  try {
-    const { organiserId, userId } = req.body;
+    try {
+        const { organiserId, userId } = req.body;
 
-    // Remove the userId from the followers array of the organiser
-    const organiser = await Organiser.findByIdAndUpdate(
-      organiserId,
-      { $pull: { followers: userId } },
-      { new: true }
-    );
+        // Remove the userId from the followers array of the organiser
+        const organiser = await Organiser.findByIdAndUpdate(
+            organiserId,
+            { $pull: { followers: userId } },
+            { new: true }
+        );
 
-    if (!organiser) {
-      return res.status(404).json({ message: "Organiser not found" });
+        if (!organiser) {
+            return res.status(404).json({
+                status: 'fail',
+                message: 'Organiser not found'
+            });
+        }
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Successfully unfollowed the organiser',
+            data: organiser
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            message: error.message
+        });
     }
-
-    res.status(200).json({ message: "Successfully unfollowed the organiser", organiser });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
 };
 
+// Get all organisers
+exports.getAllOrganisers = async (req, res) => {
+    try {
+        const organisers = await Organiser.find();
+        res.status(200).json({
+            status: 'success',
+            results: organisers.length,
+            data: organisers
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            message: error.message
+        });
+    }
+};
+
+// Get a single organiser by ID
+exports.getOrganiserById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const organiser = await Organiser.findById(id);
+
+        if (!organiser) {
+            return res.status(404).json({
+                status: 'fail',
+                message: 'Organiser not found'
+            });
+        }
+
+        res.status(200).json({
+            status: 'success',
+            data: organiser
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            message: error.message
+        });
+    }
+};
+
+// Delete an organiser by ID
+exports.deleteOrganiser = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const deletedOrganiser = await Organiser.findByIdAndDelete(id);
+
+        if (!deletedOrganiser) {
+            return res.status(404).json({
+                status: 'fail',
+                message: 'Organiser not found'
+            });
+        }
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Organiser deleted successfully'
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'fail',
+            message: error.message
+        });
+    }
+};

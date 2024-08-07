@@ -3,15 +3,29 @@ const organiserController = require("../controllers/organiserController");
 
 const router = express.Router({ mergeParams: true });
 
-router.route("/createOrganiser").post(organiserController.createOrganiser);
+// Create a new organiser
+router.post('/organisers', organiserController.createOrganiser);
 
-router.route("/updateOrganiser/:id").patch(organiserController.updateData);
+// Update organiser data
+router.put('/organisers/:id', organiserController.updateData);
 
-router.patch('/addEventId', organiserController.addEventIdToOrganiser);
+// Add a single event ID to an organiser
+router.post('/organisers/addEvent', organiserController.addEventIdToOrganiser);
 
-// Add follow and unfollow routes
-router.patch('/follow', organiserController.followOrganiser);
-router.patch('/unfollow', organiserController.unfollowOrganiser);
+// Follow an organiser
+router.post('/organisers/follow', organiserController.followOrganiser);
+
+// Unfollow an organiser
+router.post('/organisers/unfollow', organiserController.unfollowOrganiser);
+
+// Get all organisers
+router.get('/organisers', organiserController.getAllOrganisers);
+
+// Get a single organiser by ID
+router.get('/organisers/:id', organiserController.getOrganiserById);
+
+// Delete an organiser by ID
+router.delete('/organisers/:id', organiserController.deleteOrganiser);
 
 
 module.exports = router;
