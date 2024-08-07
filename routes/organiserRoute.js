@@ -28,4 +28,7 @@ router.get('/organisers/:id', organiserController.getOrganiserById);
 router.delete('/organisers/:id', organiserController.deleteOrganiser);
 
 
+router.get("/followers/:organiserId", organiserController.getFollowers);
+
+
 module.exports = router;

@@ -217,3 +217,19 @@ exports.deleteOrganiser = async (req, res) => {
         });
     }
 };
+
+exports.getFollowers = async (req, res) => {
+    try {
+        const organiserId = req.params.organiserId;
+
+        const organiser = await Organiser.findById(organiserId).populate('followers', 'name email');
+
+        if (!organiser) {
+            return res.status(404).json({ status: "fail", message: "Organiser not found" });
+        }
+
+        res.status(200).json({ status: "success", data: { followers: organiser.followers } });
+    } catch (err) {
+        res.status(400).json({ status: "fail", message: err.message });
+    }
+};
