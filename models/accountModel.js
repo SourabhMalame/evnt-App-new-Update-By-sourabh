@@ -41,6 +41,12 @@ const accountSchema = new mongoose.Schema({
             ref: "Event",
         },
     ],
+    followingOrganisers: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: "Organiser",
+        },
+    ],
 });
 
 accountSchema.pre("save", async function (next) {

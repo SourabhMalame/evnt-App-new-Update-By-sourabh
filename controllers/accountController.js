@@ -216,7 +216,6 @@ exports.getAccountByEmail = async (req, res) => {
     }
 };
 
-
 // Controller to add an event ID to the eventBooked array of an account
 exports.bookEvent = async (req, res) => {
     try {
@@ -241,4 +240,28 @@ exports.bookEvent = async (req, res) => {
         });
     }
 };
+
+exports.followOrganiser = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const organiserId = req.params.organiserId;
+
+        const user = await Account.findByIdAndUpdate(
+            userId,
+            { $addToSet: { followingOrganisers: organiserId } },
+            { new: true }
+        );
+
+        res.status(200).json({ status: "success", data: { user } });
+    } catch (err) {
+        res.status(400).json({ status: "fail", message: err.message });
+    }
+};
+
+
+
+
+
+
+
 

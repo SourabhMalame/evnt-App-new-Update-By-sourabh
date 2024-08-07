@@ -3,12 +3,13 @@ const Booking = require('../models/userBooking');
 // Create a new booking
 exports.createBooking = async (req, res) => {
     try {
-        const { passengers, totalAmount } = req.body;
+        const { passengers, totalAmount, AccountId } = req.body;
 
         // Create a new booking document
         const newBooking = new Booking({
             passengers,
             totalAmount,
+            AccountId
         });
 
         // Save the booking to the database

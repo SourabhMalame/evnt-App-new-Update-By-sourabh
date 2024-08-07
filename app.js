@@ -3,6 +3,7 @@ const cors = require("cors");
 const path = require("path");
 const helmet = require("helmet");
 const eventRoute = require("./routes/eventRoute");
+
 const accountRoute = require("./routes/accountRoute");
 const organiserRoute = require("./routes/organiserRoute");
 const paymentRoute = require("./routes/paymentRoute")
@@ -17,6 +18,7 @@ app.use(helmet());
 // Body parser, reading data from body into req.body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 const router = express.Router();
 
 // Enable CORS
@@ -26,6 +28,7 @@ const corsOptions = {
     methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: "*",
 };
+
 app.use(cors(corsOptions));
 
 app.set("view engine", "pug");
@@ -39,4 +42,6 @@ app.use("/api/v3/bankAccounts", bankAccountRoutes);
 app.use("/api/v3/booking", bookingRoutes)
 
 module.exports = app;
+
+
 
