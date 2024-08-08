@@ -219,7 +219,7 @@ exports.getAccountByEmail = async (req, res) => {
 // Controller to add an event ID to the eventBooked array of an account
 exports.bookEvent = async (req, res) => {
     try {
-        const { accountId, eventId } = req.body;
+        const { accountId, eventId, } = req.body;
 
         const updatedAccount = await Account.findByIdAndUpdate(
             accountId,
@@ -255,6 +255,44 @@ exports.followOrganiser = async (req, res) => {
         res.status(200).json({ status: "success", data: { user } });
     } catch (err) {
         res.status(400).json({ status: "fail", message: err.message });
+    }
+};
+
+// Create a booking for an account
+exports.createBooking = async (req, res) => {
+    try {
+        const { userId, participants, totalAmount, eventId } = req.body;
+
+        const account = await Account.findById(userId);
+
+        if (!account) {
+            return res.status(404).json({
+                status: "fail",
+                message: "User not found",
+            });
+        }
+
+        const newBooking = {
+            participants,
+            totalAmount,
+            eventId,
+            paymentStatus: "Pending", // default value
+        };
+
+        account.bookings.push(newBooking);
+        await account.save();
+
+        res.status(201).json({
+            status: "success",
+            data: {
+                booking: newBooking,
+            },
+        });
+    } catch (err) {
+        res.status(400).json({
+            status: "fail",
+            message: err.message,
+        });
     }
 };
 

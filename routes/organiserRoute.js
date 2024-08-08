@@ -27,8 +27,6 @@ router.get('/organisers/:id', organiserController.getOrganiserById);
 // Delete an organiser by ID
 router.delete('/organisers/:id', organiserController.deleteOrganiser);
 
-
 router.get("/followers/:organiserId", organiserController.getFollowers);
-
 
 module.exports = router;

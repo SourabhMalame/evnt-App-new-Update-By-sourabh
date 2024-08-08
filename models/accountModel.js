@@ -2,21 +2,36 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
-const accountSchema = new mongoose.Schema({
-    name: {
+const participantsSchema = new mongoose.Schema({
+    name: String,
+    seat: String,
+    gender: String,
+    age: Number,
+    stateOfResidence: String,
+});
+
+const bookingSchema = new mongoose.Schema({
+    participants: [participantsSchema],
+    totalAmount: Number,
+    paymentStatus: {
         type: String,
-        // required: [true, "Please tell us your name!"],
+        default: 'Pending',
     },
+    eventId: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Event",
+    },
+});
+
+const accountSchema = new mongoose.Schema({
+    name: String,
     email: {
         type: String,
-        // required: [true, "Please provide your email"],
         unique: true,
         lowercase: true,
     },
     password: {
         type: String,
-        // required: [true, "Please provide a password"],
-        minlength: 8,
         select: false,
     },
     passwordResetToken: String,
@@ -35,12 +50,7 @@ const accountSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: "Organiser",
     },
-    eventBooked: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: "Event",
-        },
-    ],
+    bookings: [bookingSchema],
     followingOrganisers: [
         {
             type: mongoose.Schema.ObjectId,
