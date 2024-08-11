@@ -57,6 +57,6 @@ const organiserSchema = new mongoose.Schema({
 });
 
 // Create and export the model
-const Organiser = mongoose.model('Organiser', organiserSchema);
+const Organiser = mongoose.model('Organizer', organiserSchema);
 
 module.exports = Organiser;

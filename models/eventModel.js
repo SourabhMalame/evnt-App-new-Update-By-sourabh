@@ -3,38 +3,87 @@ const mongoose = require('mongoose');
 const eventSchema = new mongoose.Schema({
     title: {
         type: String,
-        // required: [true, 'An event must have a title'],
         trim: true,
+        // required: true,
+    },
+    category: {
+        type: String,
+        // required: true,
     },
     description: {
         type: String,
-        // required: [true, 'An event must have a description'],
+        // required: true,
     },
-    date: {
-        type: Date,
-        // required: [true, 'An event must have a date'],
+    dateandtime: {
+        type: String,  // You might want to use a more structured format like Date
+        // required: true,
+    },
+    ticketprice: {
+        type: Number,
+        // required: true,
+    },
+    imageurl: {
+        type: String,
+        // required: true,
     },
     location: {
         type: String,
-        // required: [true, 'An event must have a location'],
+        // required: true,
     },
-    price: {
-        type: Number,
-        // required: [true, 'An event must have a price'],
-    },
-    type: {
+    link: {
         type: String,
-        enum: ['Workshop', 'Conference', 'Seminar', 'Webinar', 'Other'],
-        // required: [true, 'An event must have a type'],
+        // required: true,
     },
-    eventId: {
+    things_to_carry: {
+        type: [String],  // Array of strings
+        default: [],
+    },
+    food_arrangements: {
+        type: [String],  // Array of strings, multiple strings allowed
+        default: [],
+    },
+    utilities: {
+        type: [String],  // Array of strings
+        default: [],
+    },
+    bookedBy: [
+        {
+            firstName: String,
+            lastName: String,
+            email: String,
+            userId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
+            },
+            bookingDate: {
+                type: Date,
+                default: Date.now,
+            },
+        },
+    ],
+    howToReach: {
         type: String,
-        unique: true,
-
+        default: '',
+    },
+    organizerUrl: {
+        type: String,
+        required: true,
+    },
+    Hashtags: {
+        type: String,
+        required: true,
     },
     createdAt: {
         type: Date,
         default: Date.now,
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+    },
+    toShowEvent: {
+        type: Boolean,
+        default: true,
     },
 });
 

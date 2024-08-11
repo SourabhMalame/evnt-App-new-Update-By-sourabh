@@ -1,25 +1,58 @@
 const Booking = require('../models/userBooking');
+const Event = require('../models/eventModel'); // Import Event model
 
-// Create a new booking
 exports.createBooking = async (req, res) => {
     try {
-        const { passengers, totalAmount, AccountId } = req.body;
+        const { participants, totalAmount, AccountId, eventId } = req.body;
 
-        // Create a new booking document
+        if (!Array.isArray(participants) || participants.length === 0) {
+            return res.status(400).json({
+                status: 'fail',
+                message: 'Participants should be an array and cannot be empty',
+            });
+        }
+
+        // Step 1: Create a new booking document
         const newBooking = new Booking({
-            passengers,
+            participants,
             totalAmount,
-            AccountId
+            AccountId,
+            eventId
         });
 
         // Save the booking to the database
         const savedBooking = await newBooking.save();
 
+        // Step 2: Prepare the booking details to update the event
+        const bookingDate = new Date();
+        const bookingsToUpdate = participants.map(participant => ({
+            firstName: participant.firstName,
+            lastName: participant.lastName,
+            email: participant.email,
+            bookingDate
+        }));
+
+        // Update the bookedBy field in the Event model
+        await Event.findOneAndUpdate(
+            { _id: eventId },
+            {
+                $push: {
+                    bookedBy: {
+                        $each: bookingsToUpdate
+                    }
+                }
+            },
+            { new: true, useFindAndModify: false } // Return the updated document
+        );
+
         // Respond with the saved booking
         res.status(201).json({
             status: 'success',
             message: 'Booking created successfully',
-            data: savedBooking
+            data: {
+                booking: savedBooking,
+                bookingsAddedToEvent: bookingsToUpdate
+            }
         });
     } catch (error) {
         res.status(400).json({
@@ -28,6 +61,7 @@ exports.createBooking = async (req, res) => {
         });
     }
 };
+
 
 // Get all bookings
 exports.getAllBookings = async (req, res) => {
@@ -128,3 +162,11 @@ exports.deleteBooking = async (req, res) => {
         });
     }
 };
+
+
+
+
+
+
+
+

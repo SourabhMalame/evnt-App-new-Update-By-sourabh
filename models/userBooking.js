@@ -1,33 +1,32 @@
 const mongoose = require('mongoose');
 
-const passengerSchema = new mongoose.Schema({
-    name: {
+// Define the participant schema
+const participantSchema = new mongoose.Schema({
+    firstName: {
         type: String,
         required: true,
         trim: true,
     },
-    seat: {
+    lastName: {
         type: String,
         required: true,
+        trim: true,
     },
-    gender: {
+    email: {
         type: String,
-        enum: ['Male', 'Female'],
         required: true,
+        trim: true,
     },
-    age: {
-        type: Number,
-        required: true,
-        min: 0,
-    },
-    stateOfResidence: {
-        type: String,
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',  // Reference to the User model
         required: true,
     },
 });
 
+// Define the booking schema
 const bookingSchema = new mongoose.Schema({
-    passengers: [passengerSchema],
+    participants: [participantSchema],  // Array of participant objects
     totalAmount: {
         type: Number,
         required: true,
@@ -37,8 +36,18 @@ const bookingSchema = new mongoose.Schema({
         enum: ['Pending', 'Completed', 'Failed'],
         default: 'Pending',
     },
+    eventId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Event',  // Reference to the Event model
+        required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
+// Create and export the model
 const Booking = mongoose.model('Booking', bookingSchema);
 
 module.exports = Booking;
