@@ -17,11 +17,7 @@ const participantSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',  // Reference to the User model
-        required: true,
-    },
+
 });
 
 // Define the booking schema

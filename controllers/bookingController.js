@@ -1,6 +1,7 @@
 const Booking = require('../models/userBooking');
 const Event = require('../models/eventModel'); // Import Event model
 
+// Create Booking
 exports.createBooking = async (req, res) => {
     try {
         const { participants, totalAmount, AccountId, eventId } = req.body;
@@ -61,7 +62,6 @@ exports.createBooking = async (req, res) => {
         });
     }
 };
-
 
 // Get all bookings
 exports.getAllBookings = async (req, res) => {
