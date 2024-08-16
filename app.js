@@ -8,6 +8,7 @@ const organiserRoute = require("./routes/organiserRoute");
 const paymentRoute = require("./routes/paymentRoute")
 const bankAccountRoutes = require("./routes/bankAccountRoutes")
 const bookingRoutes = require("./routes/bookingRoutes")
+const profileRoutes = require("./routes/profileRoutes")
 
 const app = express();
 
@@ -37,6 +38,8 @@ app.use("/api/v3/organiser", organiserRoute);
 app.use("/api/v3/payment", paymentRoute);
 app.use("/api/v3/bankAccounts", bankAccountRoutes);
 app.use("/api/v3/booking", bookingRoutes)
+app.use('/api/profiles', profileRoutes);
+
 
 module.exports = app;
 
