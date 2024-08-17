@@ -9,6 +9,7 @@ const paymentRoute = require("./routes/paymentRoute")
 const bankAccountRoutes = require("./routes/bankAccountRoutes")
 const bookingRoutes = require("./routes/bookingRoutes")
 const profileRoutes = require("./routes/profileRoutes")
+const dignitaryRoute = require("./routes/dignitaryRoutes")
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use("/api/v3/payment", paymentRoute);
 app.use("/api/v3/bankAccounts", bankAccountRoutes);
 app.use("/api/v3/booking", bookingRoutes)
 app.use('/api/profiles', profileRoutes);
+app.use('/api/v3/dignitary', dignitaryRoute)
 
 
 module.exports = app;
