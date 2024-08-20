@@ -142,3 +142,11 @@ exports.deleteDignitary = async (req, res) => {
         });
     }
 };
+
+
+
+
+
+
+ 
+

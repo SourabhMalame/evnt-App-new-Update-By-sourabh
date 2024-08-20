@@ -1,5 +1,7 @@
 const Event = require('../models/eventModel');
 const { ObjectId } = require('mongoose').Types;
+const NodeCache = require('node-cache');
+const cache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour (3600 seconds)
 
 // Controller to create a new event
 exports.createEvent = async (req, res) => {
@@ -22,11 +24,52 @@ exports.createEvent = async (req, res) => {
 // Controller to get all events
 exports.getAllEvent = async (req, res) => {
     try {
-        const events = await Event.find();
+        const cacheKey = `events_${JSON.stringify(req.query)}`;
+        const cachedEvents = cache.get(cacheKey);
+
+        if (cachedEvents) {
+            return res.status(200).json({
+                status: 'success',
+                data: {
+                    events: cachedEvents.events,
+                    totalPages: cachedEvents.totalPages,
+                    currentPage: cachedEvents.currentPage,
+                    totalEvents: cachedEvents.totalEvents
+                },
+            });
+        }
+
+        // Pagination settings
+        const { page = 1, limit = 5 } = req.query; // Default to 5 results per page
+        const pageNumber = parseInt(page);
+        const pageSize = parseInt(limit);
+
+        // Get the total number of events
+        const totalEvents = await Event.countDocuments();
+
+        // Fetch the events for the current page with detailed fields
+        const events = await Event.find({}, 'field1 field2 _id') // Include fields you want
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize);
+
+        // Calculate the total number of pages
+        const totalPages = Math.ceil(totalEvents / pageSize);
+
+        // Cache the results along with pagination info
+        cache.set(cacheKey, {
+            events,
+            totalPages,
+            currentPage: pageNumber,
+            totalEvents
+        });
+
         res.status(200).json({
             status: 'success',
             data: {
                 events,
+                totalPages,
+                currentPage: pageNumber,
+                totalEvents
             },
         });
     } catch (error) {
@@ -36,6 +79,42 @@ exports.getAllEvent = async (req, res) => {
         });
     }
 };
+
+// exports.getAllEvent = async (req, res) => {
+//     try {
+//         const cacheKey = 'allEvents'; // Define a cache key
+//         const cachedEvents = cache.get(cacheKey);
+
+//         if (cachedEvents) {
+//             // Return cached response if it exists
+//             return res.status(200).json({
+//                 status: 'success',
+//                 data: {
+//                     events: cachedEvents,
+//                 },
+//             });
+//         }
+
+//         // If not cached, fetch from the database
+//         const events = await Event.find();
+
+//         // Cache the response
+//         cache.set(cacheKey, events);
+
+//         res.status(200).json({
+//             status: 'success',
+//             data: {
+//                 events,
+//             },
+//         });
+//     } catch (error) {
+//         res.status(500).json({
+//             status: 'fail',
+//             message: error.message,
+//         });
+//     }
+// };
+
 
 // Controller to get a single event by its ID
 exports.getEvent = async (req, res) => {

@@ -50,6 +50,13 @@ const organiserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',
     }],
+    coHosts: [{
+        type: mongoose.Schema.Types.ObjectId,
+    }],
+    dignitaries: [{
+        type: mongoose.Schema.Types.ObjectId,
+        
+    }],
     createdAt: {
         type: Date,
         default: Date.now,

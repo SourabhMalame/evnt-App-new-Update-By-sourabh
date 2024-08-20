@@ -19,5 +19,4 @@ router.route("/getlikedEventIds/:accId").get(accountController.getAccountEventId
 // booking related routes
 router.route("/booking").patch(accountController.createBooking);
 
-
 module.exports = router;
