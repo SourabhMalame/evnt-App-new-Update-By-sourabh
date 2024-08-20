@@ -1,5 +1,4 @@
-// controllers/profileController.js
-const Profile = require('../models/profileModel');
+const Profile = require('../models/profileModel'); // Adjust the path as needed
 
 // Create a new profile
 exports.createProfile = async (req, res) => {
@@ -64,3 +63,9 @@ exports.deleteProfileById = async (req, res) => {
         res.status(500).json({ status: 'error', message: error.message });
     }
 };
+
+
+
+
+
+

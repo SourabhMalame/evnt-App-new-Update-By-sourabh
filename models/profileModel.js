@@ -16,6 +16,40 @@ const profileSchema = new mongoose.Schema({
     prefix: { type: String },
     suffix: { type: String },
     website: { type: String },
+
+    // Address fields
+    billingAddress: {
+        address: { type: String },
+        address2: { type: String },
+        city: { type: String },
+        country: { type: String },
+        zipPostalCode: { type: String },
+        state: { type: String },
+    },
+    shippingAddress: {
+        address: { type: String },
+        address2: { type: String },
+        city: { type: String },
+        country: { type: String },
+        zipPostalCode: { type: String },
+        state: { type: String },
+    },
+    workAddress: {
+        address: { type: String },
+        address2: { type: String },
+        city: { type: String },
+        country: { type: String },
+        zipPostalCode: { type: String },
+        state: { type: String },
+    },
+    homeAddress: {  // Added home address section
+        address: { type: String },
+        address2: { type: String },
+        city: { type: String },
+        country: { type: String },
+        zipPostalCode: { type: String },
+        state: { type: String },
+    },
 }, { timestamps: true });
 
 const Profile = mongoose.model('Profile', profileSchema);
