@@ -19,4 +19,7 @@ router.route("/getlikedEventIds/:accId").get(accountController.getAccountEventId
 // booking related routes
 router.route("/booking").patch(accountController.createBooking);
 
+// Route for deleting an account
+router.delete('/account/:accountId', accountController.deleteAccount);;;
+
 module.exports = router;

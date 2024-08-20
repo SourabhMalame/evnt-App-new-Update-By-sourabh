@@ -296,6 +296,29 @@ exports.createBooking = async (req, res) => {
     }
 };
 
+// Delete an account
+exports.deleteAccount = async (req, res) => {
+    try {
+        const account = await Account.findByIdAndDelete(req.params.accountId);
+
+        if (!account) {
+            return res.status(404).json({
+                status: "fail",
+                message: "No account found with that ID",
+            });
+        }
+
+        res.status(200).json({
+            status: "success",
+            message: "Account deleted successfully",
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: error.message,
+        });
+    }
+};
 
 
 
