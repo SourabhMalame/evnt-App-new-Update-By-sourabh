@@ -1,39 +1,34 @@
 const Dignitary = require('../models/dignitaryModel'); // Import Dignitary model
-
+const Organiser = require("../models/organiserModel")
 // Create Dignitary Entry
 exports.createDignitary = async (req, res) => {
     try {
-        const { name, position, organization, contactDetails, country, dateOfVisit, notes } = req.body;
+        const { name, position, organization, contactDetails, country, dateOfVisit, notes, organiserId } = req.body;
 
-        // Validation for required fields
-        if (!name || !position || !organization || !country) {
-            return res.status(400).json({
-                status: 'fail',
-                message: 'Name, position, organization, and country are required fields',
-            });
-        }
-
-        // Step 1: Create a new dignitary entry
-        const newDignitaryEntry = new Dignitary({
+        // Create a new Dignitary document
+        const newDignitary = new Dignitary({
             name,
             position,
             organization,
             contactDetails,
             country,
             dateOfVisit,
-            notes,
+            notes
         });
 
-        // Save the dignitary entry to the database
-        const savedDignitaryEntry = await newDignitaryEntry.save();
+        const savedDignitary = await newDignitary.save();
 
-        // Respond with the saved dignitary entry
+        // Update the Organiser to include the new Dignitary's ID
+        await Organiser.findByIdAndUpdate(
+            organiserId,
+            { $push: { dignitaries: savedDignitary._id } },
+            { new: true, useFindAndModify: false }
+        );
+
         res.status(201).json({
             status: 'success',
-            message: 'Dignitary entry created successfully',
-            data: {
-                dignitary: savedDignitaryEntry
-            }
+            message: 'Dignitary created and organiser updated successfully',
+            data: savedDignitary
         });
     } catch (error) {
         res.status(400).json({
