@@ -1,9 +1,21 @@
 const BankAccount = require("../models/bankAccount");
+const Organiser = require("../models/organiserModel"); 
 
-// Create a new bank account
+// Create a new bank account and update organiser with the new bank account ID
 exports.createBankAccount = async (req, res) => {
     try {
+        // Create the new bank account
         const newBankAccount = await BankAccount.create(req.body);
+
+        // Update the organiser with the new bank account ID
+        if (req.body.organiserId) { 
+            await Organiser.findByIdAndUpdate(
+                req.body.organiserId,
+                { $push: { bankAccounts: newBankAccount._id } }, 
+                { new: true, runValidators: true }
+            );
+        }
+
         res.status(201).json({
             status: "success",
             data: {

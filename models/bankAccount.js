@@ -39,14 +39,14 @@ const bankAccountSchema = new mongoose.Schema({
     },
     city: {
         type: String,
-        required: true,
+        // required: true,
     },
     state: {
         type: String,
     },
     postalCode: {
         type: String,
-        required: true,
+        // required: true,
     },
     accountType: {
         type: String,

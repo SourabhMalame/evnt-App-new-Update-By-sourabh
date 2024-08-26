@@ -40,22 +40,21 @@ const organiserSchema = new mongoose.Schema({
     },
     accountId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Account',
     },
     eventIds: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Event',
     }],
     followers: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Account',
     }],
     coHosts: [{
         type: mongoose.Schema.Types.ObjectId,
     }],
     dignitaries: [{
         type: mongoose.Schema.Types.ObjectId,
-        
+    }],
+    bankAccounts: [{
+        type: mongoose.Schema.Types.ObjectId,
     }],
     createdAt: {
         type: Date,
