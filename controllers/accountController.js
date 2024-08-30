@@ -1,11 +1,16 @@
-const Account = require("../models/accountModel"); // Assuming you have an Account model
+const Account = require("../models/accountModel"); 
 const crypto = require("crypto");
+const jwt = require('jsonwebtoken');
+
 
 // Create a new account
 exports.createAccount = async (req, res) => {
     try {
+        // Create a new account
         const newAccount = await Account.create(req.body);
-        console.log(JSON.stringify(newAccount, null, 3))
+
+        console.log(JSON.stringify(newAccount, null, 3));
+
         res.status(201).json({
             status: "success",
             data: {
@@ -43,11 +48,15 @@ exports.verifyAccount = async (req, res) => {
 };
 
 // Login account
+
 exports.loginAccount = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        // 1. Find the account by email and include the password field
         const account = await Account.findOne({ email }).select("+password");
 
+        // 2. Check if the account exists and if the password is correct
         if (!account || !(await account.correctPassword(password, account.password))) {
             return res.status(401).json({
                 status: "fail",
@@ -55,12 +64,26 @@ exports.loginAccount = async (req, res) => {
             });
         }
 
+        // 3. Create a new JWT token
+        const token = jwt.sign(
+            { id: account._id, email: account.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' } // Set token expiration time
+        );
+
+        // 4. Update the account document with the new token
+        account.token = token;
+        await account.save();
+
+        // 5. Respond with the token and user data
         res.status(200).json({
             status: "success",
+            message: "Login successful",
             data: {
                 account,
             },
         });
+
     } catch (error) {
         res.status(400).json({
             status: "fail",
@@ -319,6 +342,9 @@ exports.deleteAccount = async (req, res) => {
         });
     }
 };
+
+
+
 
 
 

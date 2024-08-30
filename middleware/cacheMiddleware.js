@@ -1,6 +1,6 @@
 // middleware/cacheMiddleware.js
 const NodeCache = require("node-cache");
-const cache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour (3600 seconds)
+const cache = new NodeCache({ stdTTL: 3000 }); 
 
 const cacheMiddleware = (req, res, next) => {
     if (req.method === "GET") {

@@ -36,6 +36,9 @@ const accountSchema = new mongoose.Schema({
     },
     passwordResetToken: String,
     passwordResetExpires: Date,
+    token: {
+        type: String,
+    },
     likedEvents: [
         {
             type: mongoose.Schema.ObjectId,
