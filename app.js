@@ -14,6 +14,7 @@ const dignitaryRoute = require("./routes/dignitaryRoutes");
 const coHostRoutes = require("./routes/cohostRoutes");
 const cacheMiddleware = require("./middleware/cacheMiddleware");
 const feedbackRoutes = require("./routes/feedbackRoutes")
+const reminderRoute = require("./routes/reminderRoutes")
 
 const app = express();
 app.use(compression());
@@ -50,5 +51,6 @@ app.use('/api/v3/profiles', profileRoutes);
 app.use('/api/v3/dignitary', dignitaryRoute);
 app.use("/api/v3/cohost", coHostRoutes);
 app.use('/api/v3/feedback', feedbackRoutes);
+app.use('/api/v3/reminder', reminderRoute);
 
 module.exports = app;
